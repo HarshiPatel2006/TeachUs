@@ -1,12 +1,13 @@
+"""Compact brand header that stays on one line on mobile."""
+import base64
 from pathlib import Path
 import streamlit as st
 
 
 def header():
     logo = Path(__file__).resolve().parents[2] / 'img' / 'logo.png'
-    left, right = st.columns([1, 14], vertical_alignment='center')
-    with left:
-        st.image(str(logo), width=44)
-    with right:
-        st.markdown('<div class="brand">TeachUs</div>', unsafe_allow_html=True)
+    encoded = base64.b64encode(logo.read_bytes()).decode('ascii')
+    st.markdown(f'''<div style="display:flex;align-items:center;gap:14px">
+      <img src="data:image/png;base64,{encoded}" width="40" height="40" alt="TeachUs graduation cap">
+      <span class="brand">TeachUs</span></div>''', unsafe_allow_html=True)
     st.divider()

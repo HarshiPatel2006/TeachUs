@@ -24,7 +24,8 @@ def dialog_auto_enroll(db, subject):
     if not result or not image or result['hash'] != hashlib.sha256(image.getvalue()).hexdigest():
         return
     st.caption('Review every selected face. Leave unselected faces out of the roster.')
-    with st.form('confirm_group_enrollment'):
+    group_key = result['hash'][:12]
+    with st.form(f'confirm_group_enrollment_{group_key}'):
         entries = []
         for index, face in enumerate(result['faces']):
             with st.container(border=True):
@@ -32,9 +33,9 @@ def dialog_auto_enroll(db, subject):
                 with col1:
                     st.image(face['photo'], width=100)
                 with col2:
-                    include = st.checkbox(f'Enrol face {index + 1}', key=f'auto_include_{index}')
-                    name = st.text_input('Full name', key=f'auto_name_{index}', max_chars=100)
-                    email = st.text_input('Email', key=f'auto_email_{index}')
+                    include = st.checkbox(f'Enrol face {index + 1}', key=f'auto_include_{group_key}_{index}')
+                    name = st.text_input('Full name', key=f'auto_name_{group_key}_{index}', max_chars=100)
+                    email = st.text_input('Email', key=f'auto_email_{group_key}_{index}')
                 entries.append((include, name, email, face))
         consent = st.checkbox('I have permission to store these students’ face photos.')
         save = st.form_submit_button('Save selected students', type='primary')

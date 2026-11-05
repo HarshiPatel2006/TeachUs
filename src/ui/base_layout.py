@@ -36,7 +36,10 @@ def notices():
 def show_error(error):
     if isinstance(error, (ValueError, PermissionError)):
         st.error(str(error))
+        st.toast(str(error), icon='⚠️')
     else:
         import logging
         logging.getLogger(__name__).exception('TeachUs operation failed')
-        st.error('This operation could not finish. Check the connection and server logs, then retry.')
+        message = 'This operation could not finish. Check the connection and server logs, then retry.'
+        st.error(message)
+        st.toast(message, icon='⚠️')
