@@ -1,5 +1,11 @@
 import streamlit as st
-def subject_card(subject,student_count=None):
- with st.container(border=True):
-  st.subheader(subject['name']);st.code(subject['code'])
-  if student_count is not None:st.caption(f'{student_count} students')
+
+
+def subject_card(subject, detail=''):
+    with st.container(border=True):
+        st.caption('SUBJECT')
+        st.subheader(subject['name'])
+        st.caption(detail or f"Join code · {subject['code']}")
+        if st.button('Open subject →', key=f"open_{subject['id']}", width='stretch'):
+            st.session_state['subject_id'] = subject['id']
+            st.rerun()

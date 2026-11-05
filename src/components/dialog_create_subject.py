@@ -1,5 +1,18 @@
 import streamlit as st
-@st.dialog('Create subject')
-def create_subject_dialog(db,owner_id):
- name=st.text_input('Subject name')
- if st.button('Create',type='primary') and name.strip(): db.create_subject(owner_id,name);st.rerun()
+from src.ui.base_layout import notify, show_error
+
+
+@st.dialog('Create a subject')
+def dialog_create_subject(db):
+    st.write('Give your class a home. A unique join code is created automatically.')
+    with st.form('create_subject'):
+        name = st.text_input('Subject name', placeholder='e.g. Introduction to Physics', max_chars=120)
+        save = st.form_submit_button('Create subject', type='primary', width='stretch')
+    if save:
+        try:
+            subject = db.create_subject(name)
+            st.session_state['subject_id'] = subject['id']
+            notify('Subject created. Share the join code to invite students.')
+            st.rerun()
+        except Exception as error:
+            show_error(error)
